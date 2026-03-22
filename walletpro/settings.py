@@ -54,7 +54,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'walletpro.wsgi.application'
 
-# ✅ DATABASE_URL se automatically connect karega (Railway/Render)
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
 if DATABASE_URL:
@@ -66,7 +65,6 @@ if DATABASE_URL:
         )
     }
 else:
-    # Local development ke liye
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -94,8 +92,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
