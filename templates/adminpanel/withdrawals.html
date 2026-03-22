@@ -1,0 +1,58 @@
+{% extends 'adminpanel/admin_base.html' %}
+{% block page_title %}Withdrawals{% endblock %}
+{% block admin_content %}
+<div class="page-header">
+  <h2 class="page-title">Withdrawal Requests</h2>
+  <div style="display:flex;gap:.5rem;">
+    <a href="?status=pending" class="btn-primary-custom">Pending</a>
+    <a href="?status=approved" class="btn-primary-custom" style="background:#1a2035;">Approved</a>
+    <a href="?status=rejected" class="btn-primary-custom" style="background:#1a2035;">Rejected</a>
+  </div>
+</div>
+<div class="card-dark">
+  <table class="table table-dark-custom mb-0">
+    <thead><tr><th>#</th><th>User</th><th>Amount</th><th>UPI ID</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for txn in txns %}
+      <tr>
+        <td style="color:#64748b;font-family:'JetBrains Mono',monospace;">{{ txn.id }}</td>
+        <td>
+          <div style="font-weight:600;color:#e2e8f0;">{{ txn.user.get_full_name }}</div>
+          <div style="font-size:.75rem;color:#64748b;">Bal: ₹{{ txn.user.balance }}</div>
+        </td>
+        <td><span class="amount-badge withdraw-badge">-₹{{ txn.amount }}</span></td>
+        <td style="font-family:'JetBrains Mono',monospace;font-size:.82rem;color:#94a3b8;">{{ txn.upi_id }}</td>
+        <td><span class="status-badge status-{{ txn.status }}">{{ txn.status|title }}</span></td>
+        <td style="color:#64748b;font-size:.82rem;">{{ txn.created_at|date:"d M Y, H:i" }}</td>
+        <td>
+          {% if txn.status == 'pending' %}
+          <div style="display:flex;gap:.4rem;">
+            <button onclick="txnAction({{ txn.pk }},'approve')" class="btn-success-sm">✓ Approve</button>
+            <button onclick="txnAction({{ txn.pk }},'reject')" class="btn-danger-sm">✗ Reject</button>
+          </div>
+          {% else %}
+          <span style="color:#64748b;font-size:.8rem;">{{ txn.admin_note|default:"—" }}</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7" style="text-align:center;padding:2rem;color:#64748b;">No withdrawals found</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<form id="txnForm" method="post" action="" style="display:none;">
+  {% csrf_token %}
+  <input type="hidden" name="action" id="txnAction">
+  <input type="hidden" name="admin_note" id="txnNote">
+</form>
+<script>
+function txnAction(id, action) {
+  const note = action === 'reject' ? prompt('Rejection reason:') : '';
+  document.getElementById('txnForm').action = `/admin-panel/withdrawals/${id}/action/`;
+  document.getElementById('txnAction').value = action;
+  document.getElementById('txnNote').value = note || '';
+  document.getElementById('txnForm').submit();
+}
+</script>
+{% endblock %}

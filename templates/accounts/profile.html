@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Profile — WalletPro{% endblock %}
+{% block body %}
+{% include 'wallet/user_sidebar.html' %}
+<div class="main-content">
+  <div class="topbar"><span class="topbar-title">My Profile</span></div>
+  <div class="content-area" style="max-width:580px;">
+    {% for msg in messages %}<div class="alert mb-3" style="border-radius:10px;font-size:.85rem;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:#6ee7b7;">{{ msg }}</div>{% endfor %}
+    <div class="card-dark">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row g-3 mb-3">
+          <div class="col-6">
+            <label style="color:#94a3b8;font-size:.78rem;font-weight:600;margin-bottom:.4rem;display:block;">FIRST NAME</label>
+            <input type="text" name="first_name" class="form-control form-control-dark" value="{{ user.first_name }}">
+          </div>
+          <div class="col-6">
+            <label style="color:#94a3b8;font-size:.78rem;font-weight:600;margin-bottom:.4rem;display:block;">LAST NAME</label>
+            <input type="text" name="last_name" class="form-control form-control-dark" value="{{ user.last_name }}">
+          </div>
+        </div>
+        <div class="mb-3">
+          <label style="color:#94a3b8;font-size:.78rem;font-weight:600;margin-bottom:.4rem;display:block;">PHONE</label>
+          <input type="text" name="phone" class="form-control form-control-dark" value="{{ user.phone }}">
+        </div>
+        <div class="mb-3">
+          <label style="color:#94a3b8;font-size:.78rem;font-weight:600;margin-bottom:.4rem;display:block;">UPI ID</label>
+          <input type="text" name="upi_id" class="form-control form-control-dark" value="{{ user.upi_id }}">
+        </div>
+        <div class="mb-3">
+          <label style="color:#94a3b8;font-size:.78rem;font-weight:600;margin-bottom:.4rem;display:block;">PROFILE PHOTO</label>
+          <input type="file" name="profile_photo" class="form-control form-control-dark" accept="image/*">
+        </div>
+        <div class="mb-4">
+          <label style="color:#94a3b8;font-size:.78rem;font-weight:600;margin-bottom:.4rem;display:block;">ADDRESS</label>
+          <textarea name="address" class="form-control form-control-dark" rows="2">{{ user.address }}</textarea>
+        </div>
+        <button type="submit" class="btn-primary-custom">Save Changes</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

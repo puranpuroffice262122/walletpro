@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Notifications — WalletPro{% endblock %}
+{% block body %}
+{% include 'wallet/user_sidebar.html' %}
+<div class="main-content">
+  <div class="topbar"><span class="topbar-title">Notifications</span></div>
+  <div class="content-area" style="max-width:640px;">
+    <div class="card-dark">
+      {% for n in notifs %}
+      <div style="display:flex;align-items:flex-start;gap:.75rem;padding:.85rem 0;{% if not forloop.last %}border-bottom:1px solid #1e293b;{% endif %}{% if not n.is_read %}background:rgba(99,102,241,.03);{% endif %}">
+        <div style="width:36px;height:36px;border-radius:50%;background:rgba(99,102,241,.15);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;">🔔</div>
+        <div style="flex:1;">
+          <div style="color:#e2e8f0;font-size:.88rem;line-height:1.5;">{{ n.message }}</div>
+          <div style="color:#64748b;font-size:.75rem;margin-top:.25rem;">{{ n.created_at|date:"d M Y, H:i" }}</div>
+        </div>
+        {% if not n.is_read %}<div style="width:7px;height:7px;border-radius:50%;background:#6366f1;margin-top:.4rem;"></div>{% endif %}
+      </div>
+      {% empty %}
+      <div style="text-align:center;padding:3rem;color:#64748b;">
+        <div style="font-size:3rem;margin-bottom:1rem;">🔕</div>
+        <div>No notifications yet</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

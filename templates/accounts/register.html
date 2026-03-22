@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Register — WalletPro{% endblock %}
+{% block body %}
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0a0e1a 0%,#0f1629 100%);padding:2rem 1rem;">
+  <div style="width:100%;max-width:480px;">
+    <div style="text-align:center;margin-bottom:2rem;">
+      <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#6366f1,#4f46e5);display:inline-flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1rem;box-shadow:0 8px 24px rgba(99,102,241,.4);">💳</div>
+      <h1 style="font-size:1.6rem;font-weight:800;color:#f1f5f9;">Create Account</h1>
+      <p style="color:#64748b;font-size:.88rem;">Join WalletPro today</p>
+    </div>
+    <div class="card-dark" style="padding:2rem;">
+      <form method="post">
+        {% csrf_token %}
+        <div class="row g-3 mb-3">
+          <div class="col-6">
+            <label style="color:#94a3b8;font-size:.78rem;font-weight:600;margin-bottom:.4rem;display:block;">FIRST NAME</label>
+            <input type="text" name="first_name" class="form-control form-control-dark" placeholder="First" required>
+          </div>
+          <div class="col-6">
+            <label style="color:#94a3b8;font-size:.78rem;font-weight:600;margin-bottom:.4rem;display:block;">LAST NAME</label>
+            <input type="text" name="last_name" class="form-control form-control-dark" placeholder="Last" required>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label style="color:#94a3b8;font-size:.78rem;font-weight:600;margin-bottom:.4rem;display:block;">EMAIL</label>
+          <input type="email" name="email" class="form-control form-control-dark" placeholder="you@example.com" required>
+        </div>
+        <div class="mb-3">
+          <label style="color:#94a3b8;font-size:.78rem;font-weight:600;margin-bottom:.4rem;display:block;">PHONE</label>
+          <input type="text" name="phone" class="form-control form-control-dark" placeholder="+91 9999999999">
+        </div>
+        <div class="mb-3">
+          <label style="color:#94a3b8;font-size:.78rem;font-weight:600;margin-bottom:.4rem;display:block;">PASSWORD</label>
+          <input type="password" name="password1" class="form-control form-control-dark" placeholder="Min 8 characters" required>
+        </div>
+        <div class="mb-4">
+          <label style="color:#94a3b8;font-size:.78rem;font-weight:600;margin-bottom:.4rem;display:block;">CONFIRM PASSWORD</label>
+          <input type="password" name="password2" class="form-control form-control-dark" placeholder="Repeat password" required>
+        </div>
+        {% if form.errors %}<div style="color:#f87171;font-size:.82rem;margin-bottom:1rem;">{{ form.errors }}</div>{% endif %}
+        <button type="submit" class="btn-primary-custom w-100 justify-content-center" style="padding:.8rem;">Create Account <i class="fas fa-arrow-right ms-1"></i></button>
+      </form>
+      <p style="text-align:center;margin-top:1.25rem;color:#64748b;font-size:.85rem;">Already have an account? <a href="{% url 'accounts:login' %}" style="color:#a5b4fc;text-decoration:none;font-weight:600;">Sign in</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}

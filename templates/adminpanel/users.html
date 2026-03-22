@@ -1,0 +1,105 @@
+{% extends 'adminpanel/admin_base.html' %}
+{% block page_title %}User Management{% endblock %}
+{% block admin_content %}
+<div class="page-header">
+  <h2 class="page-title">Users</h2>
+  <form method="get" style="display:flex;gap:.5rem;">
+    <input type="text" name="q" value="{{ search }}" class="search-box" placeholder="Search by name or email...">
+    <select name="status" class="search-box" onchange="this.form.submit()">
+      <option value="">All Status</option>
+      <option value="pending" {% if filter == 'pending' %}selected{% endif %}>Pending</option>
+      <option value="active" {% if filter == 'active' %}selected{% endif %}>Active</option>
+      <option value="rejected" {% if filter == 'rejected' %}selected{% endif %}>Rejected</option>
+      <option value="suspended" {% if filter == 'suspended' %}selected{% endif %}>Suspended</option>
+    </select>
+    <button type="submit" class="btn-primary-custom">Search</button>
+  </form>
+</div>
+<div class="card-dark">
+  <table class="table table-dark-custom mb-0">
+    <thead><tr><th>User</th><th>Account No.</th><th>Balance</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for u in users %}
+      <tr>
+        <td>
+          <div style="font-weight:600;color:#e2e8f0;">{{ u.get_full_name|default:u.email }}</div>
+          <div style="font-size:.75rem;color:#64748b;">{{ u.email }}</div>
+        </td>
+        <td style="font-family:'JetBrains Mono',monospace;font-size:.82rem;color:#94a3b8;">{{ u.account_number|default:"—" }}</td>
+        <td><span class="amount-badge deposit-badge">₹{{ u.balance }}</span></td>
+        <td><span class="status-badge status-{{ u.account_status }}">{{ u.account_status|title }}</span></td>
+        <td style="color:#64748b;font-size:.82rem;">{{ u.created_at|date:"d M Y" }}</td>
+        <td>
+          <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+            {% if u.account_status == 'pending' %}
+            <button onclick="openAction('{{ u.pk }}','approve')" class="btn-success-sm">✓ Approve</button>
+            <button onclick="openAction('{{ u.pk }}','reject')" class="btn-danger-sm">✗ Reject</button>
+            {% elif u.account_status == 'active' %}
+            <button onclick="submitAction('{{ u.pk }}','suspend')" class="btn-warning-sm">⏸ Suspend</button>
+            {% elif u.account_status == 'suspended' %}
+            <button onclick="submitAction('{{ u.pk }}','activate')" class="btn-success-sm">▶ Activate</button>
+            {% endif %}
+            {% if u.id_photo %}
+            <a href="{{ u.id_photo.url }}" target="_blank" style="padding:.35rem .8rem;border-radius:6px;font-size:.78rem;font-weight:600;color:#94a3b8;border:1px solid #1e293b;text-decoration:none;">🪪 ID</a>
+            {% endif %}
+            <button onclick="submitAction('{{ u.pk }}','delete')" class="btn-danger-sm" onclick="return confirm('Delete?')">🗑</button>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" style="text-align:center;padding:2rem;color:#64748b;">No users found</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Hidden form for quick actions -->
+<form id="actionForm" method="post" action="" style="display:none;">
+  {% csrf_token %}
+  <input type="hidden" name="action" id="actionType">
+  <input type="hidden" name="admin_note" id="actionNote">
+</form>
+
+<!-- Approve/Reject Modal -->
+<div class="modal fade modal-dark" id="actionModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle">Action</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <label style="color:#94a3b8;font-size:.78rem;font-weight:600;margin-bottom:.4rem;display:block;">ADMIN NOTE (Optional)</label>
+        <textarea id="noteInput" class="form-control form-control-dark" rows="3" placeholder="Reason or note..."></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-danger-sm" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn-success-sm" onclick="confirmAction()">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentUid = null, currentAction = null;
+function openAction(uid, action) {
+  currentUid = uid; currentAction = action;
+  document.getElementById('modalTitle').textContent = action === 'approve' ? '✓ Approve User' : '✗ Reject User';
+  new bootstrap.Modal(document.getElementById('actionModal')).show();
+}
+function confirmAction() {
+  const form = document.getElementById('actionForm');
+  form.action = `/admin-panel/users/${currentUid}/action/`;
+  document.getElementById('actionType').value = currentAction;
+  document.getElementById('actionNote').value = document.getElementById('noteInput').value;
+  form.submit();
+}
+function submitAction(uid, action) {
+  if (!confirm(`Confirm: ${action} this user?`)) return;
+  const form = document.getElementById('actionForm');
+  form.action = `/admin-panel/users/${uid}/action/`;
+  document.getElementById('actionType').value = action;
+  form.submit();
+}
+</script>
+{% endblock %}

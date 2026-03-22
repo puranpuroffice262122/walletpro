@@ -1,0 +1,24 @@
+{% extends 'adminpanel/admin_base.html' %}
+{% block page_title %}Orders{% endblock %}
+{% block admin_content %}
+<div class="page-header"><h2 class="page-title">Orders</h2></div>
+<div class="card-dark">
+  <table class="table table-dark-custom mb-0">
+    <thead><tr><th>#</th><th>User</th><th>Product</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+    <tbody>
+      {% for o in orders %}
+      <tr>
+        <td style="color:#64748b;font-family:'JetBrains Mono',monospace;">{{ o.id }}</td>
+        <td style="font-size:.85rem;color:#e2e8f0;">{{ o.user.get_full_name }}</td>
+        <td style="font-size:.85rem;color:#e2e8f0;">{{ o.product.name }}</td>
+        <td><span class="amount-badge withdraw-badge">₹{{ o.total_amount }}</span></td>
+        <td><span class="status-badge status-{% if o.status == 'completed' %}active{% else %}pending{% endif %}">{{ o.status|title }}</span></td>
+        <td style="color:#64748b;font-size:.82rem;">{{ o.created_at|date:"d M Y" }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" style="text-align:center;padding:2rem;color:#64748b;">No orders yet</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">💳</div>
+    <div class="logo-text">
+      <h2>WalletPro</h2>
+      <span>Digital Wallet</span>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <a href="{% url 'wallet:dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+      <span class="ni">🏠</span> Dashboard
+    </a>
+    <a href="{% url 'wallet:deposit' %}" class="nav-link {% if request.resolver_match.url_name == 'deposit' %}active{% endif %}">
+      <span class="ni">⬆️</span> Deposit
+    </a>
+    <a href="{% url 'wallet:withdraw' %}" class="nav-link {% if request.resolver_match.url_name == 'withdraw' %}active{% endif %}">
+      <span class="ni">⬇️</span> Withdraw
+    </a>
+    <a href="{% url 'wallet:transactions' %}" class="nav-link {% if request.resolver_match.url_name == 'transactions' %}active{% endif %}">
+      <span class="ni">📋</span> Transactions
+    </a>
+    <div class="nav-section-label">More</div>
+    <a href="{% url 'wallet:products' %}" class="nav-link {% if request.resolver_match.url_name == 'products' %}active{% endif %}">
+      <span class="ni">🛍️</span> Products
+    </a>
+    <a href="{% url 'wallet:notifications' %}" class="nav-link {% if request.resolver_match.url_name == 'notifications' %}active{% endif %}">
+      <span class="ni">🔔</span> Notifications
+      {% if unread_notifs %}<span class="badge-pill">{{ unread_notifs }}</span>{% endif %}
+    </a>
+    <a href="{% url 'accounts:profile' %}" class="nav-link">
+      <span class="ni">👤</span> Profile
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <a href="{% url 'accounts:logout' %}" class="nav-link" style="color:#ef4444;">
+      <span class="ni">🚪</span> Sign Out
+    </a>
+  </div>
+</div>

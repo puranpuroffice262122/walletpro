@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Withdraw — WalletPro{% endblock %}
+{% block body %}
+{% include 'wallet/user_sidebar.html' %}
+<div class="main-content">
+  <div class="topbar"><span class="topbar-title">Withdraw Money</span></div>
+  <div class="content-area" style="max-width:560px;">
+    {% for msg in messages %}<div class="alert mb-3" style="border-radius:10px;font-size:.85rem;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#f87171;">{{ msg }}</div>{% endfor %}
+    <div class="card-dark">
+      <div style="margin-bottom:1.5rem;">
+        <h2 style="font-size:1.1rem;font-weight:800;color:#f1f5f9;margin-bottom:.25rem;">Withdraw Funds</h2>
+        <div style="display:flex;align-items:center;gap:.5rem;margin-top:.5rem;">
+          <span style="color:#64748b;font-size:.85rem;">Available Balance:</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#10b981;font-size:.95rem;">₹{{ balance }}</span>
+        </div>
+      </div>
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label style="color:#94a3b8;font-size:.78rem;font-weight:600;margin-bottom:.4rem;display:block;">AMOUNT (₹)</label>
+          <input type="number" name="amount" class="form-control form-control-dark" placeholder="Enter amount" min="1" max="{{ balance }}" step="0.01" required>
+        </div>
+        <div class="mb-4">
+          <label style="color:#94a3b8;font-size:.78rem;font-weight:600;margin-bottom:.4rem;display:block;">UPI ID</label>
+          <input type="text" name="upi_id" class="form-control form-control-dark" placeholder="yourname@upi" required>
+        </div>
+        <button type="submit" class="btn-primary-custom w-100 justify-content-center" style="padding:.8rem;background:linear-gradient(135deg,#ef4444,#dc2626);">Submit Withdrawal Request</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

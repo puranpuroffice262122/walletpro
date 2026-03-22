@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Open Account — WalletPro{% endblock %}
+{% block body %}
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0f1629;padding:2rem 1rem;">
+  <div style="width:100%;max-width:520px;">
+    <div class="card-dark" style="padding:2rem;">
+      <div style="text-align:center;margin-bottom:1.75rem;">
+        <div style="font-size:2.5rem;margin-bottom:.5rem;">🏦</div>
+        <h2 style="font-size:1.25rem;font-weight:800;color:#f1f5f9;">Open Your Wallet Account</h2>
+        <p style="color:#64748b;font-size:.85rem;">Fill details to activate your wallet. Admin will review within 24 hours.</p>
+      </div>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label style="color:#94a3b8;font-size:.78rem;font-weight:600;margin-bottom:.4rem;display:block;">UPI ID</label>
+          <input type="text" name="upi_id" class="form-control form-control-dark" placeholder="yourname@upi" required>
+        </div>
+        <div class="mb-3">
+          <label style="color:#94a3b8;font-size:.78rem;font-weight:600;margin-bottom:.4rem;display:block;">ID PROOF (Aadhaar/PAN)</label>
+          <input type="file" name="id_photo" class="form-control form-control-dark" accept="image/*" required>
+        </div>
+        <div class="mb-3">
+          <label style="color:#94a3b8;font-size:.78rem;font-weight:600;margin-bottom:.4rem;display:block;">ADDRESS</label>
+          <textarea name="address" class="form-control form-control-dark" rows="2" placeholder="Your full address"></textarea>
+        </div>
+        <div class="row g-3 mb-4">
+          <div class="col-4">
+            <input type="text" name="city" class="form-control form-control-dark" placeholder="City">
+          </div>
+          <div class="col-4">
+            <input type="text" name="state" class="form-control form-control-dark" placeholder="State">
+          </div>
+          <div class="col-4">
+            <input type="text" name="pincode" class="form-control form-control-dark" placeholder="Pincode">
+          </div>
+        </div>
+        <button type="submit" class="btn-primary-custom w-100 justify-content-center" style="padding:.8rem;">Submit Application</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

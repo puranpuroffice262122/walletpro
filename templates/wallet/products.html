@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Products — WalletPro{% endblock %}
+{% block body %}
+{% include 'wallet/user_sidebar.html' %}
+<div class="main-content">
+  <div class="topbar"><span class="topbar-title">Products</span></div>
+  <div class="content-area">
+    <div class="row g-3">
+      {% for p in products %}
+      <div class="col-md-4">
+        <div class="card-dark" style="height:100%;">
+          {% if p.image %}<img src="{{ p.image.url }}" style="width:100%;height:160px;object-fit:cover;border-radius:8px;margin-bottom:1rem;" alt="{{ p.name }}">{% endif %}
+          <div style="font-weight:700;color:#f1f5f9;margin-bottom:.25rem;">{{ p.name }}</div>
+          <div style="color:#64748b;font-size:.82rem;margin-bottom:.75rem;">{{ p.description|truncatechars:80 }}</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:auto;">
+            <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#10b981;font-size:1rem;">₹{{ p.price }}</span>
+            <form method="post" action="{% url 'wallet:buy_product' p.pk %}">
+              {% csrf_token %}
+              <button type="submit" class="btn-success-sm">Buy Now</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12" style="text-align:center;padding:3rem;color:#64748b;">No products available</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

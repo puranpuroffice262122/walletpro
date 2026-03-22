@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block body %}
+<!-- Admin Sidebar -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">⚡</div>
+    <div class="logo-text">
+      <h2>WalletPro</h2>
+      <span>Admin Panel</span>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Overview</div>
+    <a href="{% url 'adminpanel:dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+      <span class="ni">📊</span> Dashboard
+    </a>
+    <div class="nav-section-label">Users</div>
+    <a href="{% url 'adminpanel:users' %}" class="nav-link {% if request.resolver_match.url_name == 'users' %}active{% endif %}">
+      <span class="ni">👥</span> All Users
+      {% if pending_users %}<span class="badge-pill amber">{{ pending_users }}</span>{% endif %}
+    </a>
+    <div class="nav-section-label">Transactions</div>
+    <a href="{% url 'adminpanel:deposits' %}" class="nav-link {% if request.resolver_match.url_name == 'deposits' %}active{% endif %}">
+      <span class="ni">⬆️</span> Deposits
+      {% if pending_deposits %}<span class="badge-pill">{{ pending_deposits }}</span>{% endif %}
+    </a>
+    <a href="{% url 'adminpanel:withdrawals' %}" class="nav-link {% if request.resolver_match.url_name == 'withdrawals' %}active{% endif %}">
+      <span class="ni">⬇️</span> Withdrawals
+      {% if pending_withdrawals %}<span class="badge-pill">{{ pending_withdrawals }}</span>{% endif %}
+    </a>
+    <a href="{% url 'adminpanel:transactions' %}" class="nav-link {% if request.resolver_match.url_name == 'transactions' %}active{% endif %}">
+      <span class="ni">📋</span> All Transactions
+    </a>
+    <div class="nav-section-label">Store</div>
+    <a href="{% url 'adminpanel:products' %}" class="nav-link {% if request.resolver_match.url_name == 'products' %}active{% endif %}">
+      <span class="ni">🛍️</span> Products
+    </a>
+    <a href="{% url 'adminpanel:orders' %}" class="nav-link {% if request.resolver_match.url_name == 'orders' %}active{% endif %}">
+      <span class="ni">📦</span> Orders
+    </a>
+    <div class="nav-section-label">System</div>
+    <a href="/django-admin/" class="nav-link" target="_blank">
+      <span class="ni">🔧</span> Django Admin
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <a href="{% url 'accounts:logout' %}" class="nav-link" style="color:#ef4444;">
+      <span class="ni">🚪</span> Sign Out
+    </a>
+  </div>
+</div>
+
+<div class="main-content">
+  <div class="topbar">
+    <span class="topbar-title">{% block page_title %}Admin Panel{% endblock %}</span>
+    <div style="display:flex;align-items:center;gap:.75rem;">
+      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#d97706);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:#fff;">A</div>
+      <div>
+        <div style="font-size:.82rem;font-weight:600;color:#e2e8f0;">{{ request.user.get_full_name|default:request.user.email }}</div>
+        <div style="font-size:.68rem;color:#f59e0b;">Super Admin</div>
+      </div>
+    </div>
+  </div>
+  <div class="content-area">
+    {% for msg in messages %}
+    <div class="alert mb-3" style="border-radius:10px;font-size:.85rem;
+      {% if 'success' in msg.tags %}background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:#6ee7b7;
+      {% elif 'error' in msg.tags %}background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#f87171;
+      {% else %}background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:#fcd34d;{% endif %}">
+      {{ msg }}
+    </div>
+    {% endfor %}
+    {% block admin_content %}{% endblock %}
+  </div>
+</div>
+{% endblock %}

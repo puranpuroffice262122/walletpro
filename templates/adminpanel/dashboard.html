@@ -1,0 +1,107 @@
+{% extends 'adminpanel/admin_base.html' %}
+{% block page_title %}Dashboard{% endblock %}
+{% block admin_content %}
+
+<!-- Stat Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3 col-6">
+    <div class="stat-card">
+      <div class="stat-icon mb-2" style="background:rgba(99,102,241,.15);">👥</div>
+      <div style="font-size:1.6rem;font-weight:800;color:#f1f5f9;font-family:'JetBrains Mono',monospace;">{{ total_users }}</div>
+      <div style="color:#64748b;font-size:.78rem;margin-top:.2rem;">Total Users</div>
+      <div style="color:#10b981;font-size:.75rem;margin-top:.4rem;">{{ active_users }} active</div>
+    </div>
+  </div>
+  <div class="col-md-3 col-6">
+    <div class="stat-card" style="{% if pending_users %}border-color:rgba(245,158,11,.3);{% endif %}">
+      <div class="stat-icon mb-2" style="background:rgba(245,158,11,.15);">⏳</div>
+      <div style="font-size:1.6rem;font-weight:800;color:{% if pending_users %}#f59e0b{% else %}#f1f5f9{% endif %};font-family:'JetBrains Mono',monospace;">{{ pending_users }}</div>
+      <div style="color:#64748b;font-size:.78rem;margin-top:.2rem;">Pending KYC</div>
+      <a href="{% url 'adminpanel:users' %}?status=pending" style="color:#f59e0b;font-size:.75rem;text-decoration:none;">Review →</a>
+    </div>
+  </div>
+  <div class="col-md-3 col-6">
+    <div class="stat-card" style="{% if pending_deposits %}border-color:rgba(16,185,129,.3);{% endif %}">
+      <div class="stat-icon mb-2" style="background:rgba(16,185,129,.15);">⬆️</div>
+      <div style="font-size:1.6rem;font-weight:800;color:#f1f5f9;font-family:'JetBrains Mono',monospace;">{{ pending_deposits }}</div>
+      <div style="color:#64748b;font-size:.78rem;margin-top:.2rem;">Pending Deposits</div>
+      <a href="{% url 'adminpanel:deposits' %}" style="color:#10b981;font-size:.75rem;text-decoration:none;">Approve →</a>
+    </div>
+  </div>
+  <div class="col-md-3 col-6">
+    <div class="stat-card" style="{% if pending_withdrawals %}border-color:rgba(239,68,68,.3);{% endif %}">
+      <div class="stat-icon mb-2" style="background:rgba(239,68,68,.15);">⬇️</div>
+      <div style="font-size:1.6rem;font-weight:800;color:#f1f5f9;font-family:'JetBrains Mono',monospace;">{{ pending_withdrawals }}</div>
+      <div style="color:#64748b;font-size:.78rem;margin-top:.2rem;">Pending Withdrawals</div>
+      <a href="{% url 'adminpanel:withdrawals' %}" style="color:#ef4444;font-size:.75rem;text-decoration:none;">Process →</a>
+    </div>
+  </div>
+</div>
+
+<!-- Financial Stats -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="stat-card" style="background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(79,70,229,.04));">
+      <div style="color:#94a3b8;font-size:.75rem;font-weight:600;letter-spacing:.06em;margin-bottom:.5rem;">TOTAL WALLET BALANCE</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:800;color:#a5b4fc;">₹{{ total_balance }}</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card" style="background:linear-gradient(135deg,rgba(16,185,129,.08),rgba(5,150,105,.04));">
+      <div style="color:#94a3b8;font-size:.75rem;font-weight:600;letter-spacing:.06em;margin-bottom:.5rem;">TOTAL DEPOSITS</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:800;color:#10b981;">₹{{ total_deposits }}</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card" style="background:linear-gradient(135deg,rgba(239,68,68,.08),rgba(220,38,38,.04));">
+      <div style="color:#94a3b8;font-size:.75rem;font-weight:600;letter-spacing:.06em;margin-bottom:.5rem;">TOTAL WITHDRAWALS</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:800;color:#ef4444;">₹{{ total_withdrawals }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <!-- Pending KYC -->
+  <div class="col-md-6">
+    <div class="card-dark">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+        <h3 style="font-size:.9rem;font-weight:700;color:#f1f5f9;">Pending KYC Applications</h3>
+        <a href="{% url 'adminpanel:users' %}?status=pending" style="font-size:.78rem;color:#6366f1;text-decoration:none;">View All →</a>
+      </div>
+      {% for u in recent_users %}
+      <div style="display:flex;align-items:center;gap:.75rem;padding:.7rem 0;border-bottom:1px solid #1e293b;">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#4f46e5);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;">{{ u.first_name|first }}</div>
+        <div style="flex:1;">
+          <div style="font-size:.85rem;font-weight:600;color:#e2e8f0;">{{ u.get_full_name }}</div>
+          <div style="font-size:.75rem;color:#64748b;">{{ u.email }}</div>
+        </div>
+        <a href="{% url 'adminpanel:users' %}?status=pending" style="font-size:.75rem;color:#f59e0b;text-decoration:none;">Review</a>
+      </div>
+      {% empty %}
+      <div style="text-align:center;padding:1.5rem;color:#64748b;font-size:.85rem;">No pending applications</div>
+      {% endfor %}
+    </div>
+  </div>
+  <!-- Pending Transactions -->
+  <div class="col-md-6">
+    <div class="card-dark">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+        <h3 style="font-size:.9rem;font-weight:700;color:#f1f5f9;">Pending Transactions</h3>
+        <a href="{% url 'adminpanel:deposits' %}" style="font-size:.78rem;color:#6366f1;text-decoration:none;">View All →</a>
+      </div>
+      {% for txn in recent_txns %}
+      <div style="display:flex;align-items:center;gap:.75rem;padding:.7rem 0;border-bottom:1px solid #1e293b;">
+        <div style="font-size:1.2rem;">{% if txn.type == 'deposit' %}⬆️{% else %}⬇️{% endif %}</div>
+        <div style="flex:1;">
+          <div style="font-size:.85rem;font-weight:600;color:#e2e8f0;">{{ txn.user.get_full_name }}</div>
+          <div style="font-size:.75rem;color:#64748b;">{{ txn.type|title }} • {{ txn.created_at|date:"d M" }}</div>
+        </div>
+        <span class="amount-badge {% if txn.type == 'deposit' %}deposit-badge{% else %}withdraw-badge{% endif %}">₹{{ txn.amount }}</span>
+      </div>
+      {% empty %}
+      <div style="text-align:center;padding:1.5rem;color:#64748b;font-size:.85rem;">No pending transactions</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
